@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://kit.fontawesome.com/89c39e4b83.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
+    <a href="" class="answer-anchortag">
+        <div class="container container-answer">
+            <div class="answer-votes">
+                <i class="fa-solid fa-sort-up"></i>
+                <div class="votes">%s</div>
+                <i class="fa-solid fa-sort-down"></i>
+            </div>
+            <div class="answer-body">
+                <!-- COURSE AND USERNAME -->
+                <div class="question-header">
+                    <div class="question-header-details">
+                        <div class="question-details">
+                            <p class="question-detail">@%s</p>
+                            <div class="tag tag-community"><p class="question-detail">%s</p></div>
+                        </div>
+                        <div class="time-posted">
+                            <p class="question-detail">%s</p>
+                        </div>
+                    </div>
+                     <!-- OPTIONS MENU -->
+                     <div class="options-menu">
+                        <div class="copylink" data-questionId="%s">
+                            <i class="fa-solid fa-link"></i>  <!--Contains Save, Report, Similar Questions-->
+                        </div>
+                    </div>
+                </div>
+                <!-- QUESTION AND RADAR BUTTON -->
+                <div class="question-body">
+                    <div class="content">
+                        <div class="questionbox">%s</div>
+                    </div>
+                </div>
+                <!-- QUESION NUMBERS -->
+                <div class="question-numbers">
+                    <p class="question-detail">%s comments</p>
+                    <p class="question-detail">%s likes</p>
+                </div>
+            </div>
+        </div>
+    </a>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://kit.fontawesome.com/89c39e4b83.js" crossorigin="anonymous"></script>
+    <title>Discourse</title>
+</head>
+<body>
+    <div class="container container-ask">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+                                    <!-- HEADER -->
+    <!-- contains LOGO, SEARCH BAR, NOTIFICATION, LOG IN/USERNAME, CREDIT POINTS  -->
+    <div class="tray tray-header">
+        <!-- DISCOURSE LOGO -->
+        <div class="container container-logo">
+            <div class="logo"><a href="index.html"><h1>DISCOURSE</h1></a></div>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="container container-searchbar">
+                <form class="form form-search" id="form-search" action="../discoursedb/questions/nltksearch.py" method="get">
+                    <button type="submit" id="searchbtn" name="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <div class="container-query">
+                        <input type="text" id="query" name="query" placeholder="Search for topic">
+                    </div>
+                </form>
+                <div class="form-clear"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+
+        <!-- NOTIFICATIONS AND LOGIN/USERNAME -->
+        <div class="container container-profile">
+            <div class="profile">
+                <div class="notifications"><i class="fa-solid fa-bell"></i></div>
+                <div class="btn btn-login"><p>Log In</p></div>
+            </div>
+        </div>
+
+    </div>
+
+                                    <!--  CONTENT -->
+    
+    <div class="tray tray-content">
+        <!-- HOME, EXPLORE, COMMUNITIES -->
+        <div class="container container-sidebar">
+            <div class="sidebar">
+                <div class="option option-explore"><a href="../discoursedb/questions/displayposts.py"><p>Explore</p></a></a></div>
+                <div class="option option-profile"><a href=""><p>Profile</p></a></a></div>
+                <div class="option option-radar"><a href=""><p>Radar</p><a></a></i class="fa-solid fa-chevron-down"></i></div>
+                <div class="option option-mycommunities">
+                    <p>My Communities</p>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- BIG BUTTON TO ASK A QUESTION -->
+            <!-- QUESTION CARD (RADAR, COMMENTS, SATISFIED) -->
+        <div class="container container-feed">
+            <!--QUESTION CONTAINER -->
+            <div class="container container-question">
+                <!-- QUESTION -->
+                <div class="question question-1">
+                    <!-- QUESTION AND RADAR BUTTON -->
+                    <div class="question-body">
+                        <div class="content">
+                            <div class="questionbox">In Machine Learning, Lorem ipsum dolor sit amet consectetur adipisicing elit. In id praesentium accusamus maxime minus quis blanditiis voluptatibus reiciendis, ad deleniti. what is a decision tree used for?</div>
+                        </div>
+                        <div class="sidebuttons">
+                            <div class="icon"><i class="fa-solid fa-satellite-dish"></i></div>
+                        </div>
+                    </div>
+                    <!-- QUESTION RIGHT SIDE -->
+                
+                <!-- COURSE AND USERNAME -->
+                    <div class="header">
+                        <div class="question-details">
+                            <div class="tag tag-community"><p class="question-detail">Comp Sci</p></div>
+                            <p class="question-detail">@ericmacharia82</p>
+                            <p class="question-detail">21 comments</p>
+                            <p class="question-detail">43 likes</p>
+                        </div>
+
+                        <!-- OPTIONS MENU -->
+                        <div class="options-menu">                            
+                            <div class="icon">
+                                <i class="fa-solid fa-ellipsis"></i>  <!--Contains Save, Report, Similar Questions-->
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="container container-allcommunities">gf</div>
+    </div>
+    <script src="../javascript/script.js"></script>
+    <form action="../discoursedb/questions/nltksearch.py"></form>
+</body>
+</html>
+
+
