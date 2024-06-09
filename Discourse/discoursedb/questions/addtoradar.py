@@ -8,7 +8,7 @@ import json
 import discoursedbconn as dbconn
 
 log = ""
-# FUNCTION TO UPDATE questions.radarCount
+# UPDATE questions.radarCount
 def update_questions_radarCount(questionId, newradarCount):
     sql_update = "UPDATE questions SET radarCount = '%s' WHERE questionid = '%s'"
 
@@ -16,21 +16,35 @@ def update_questions_radarCount(questionId, newradarCount):
     variables_tuple = (newradarCount, questionId)
     dbconn.mycursor.execute(sql_update % variables_tuple)
     dbconn.conn.commit()
-    return f"questions.radarCount Updated: {newradarCount}"
+    return f"questions.radarCount Updated: {newradarCount}\n"
 
-
-# FUNCTION TO UPDATE users.radarCount
-def update_user_radar_count(userid, newradarCount):
+# UPDATE users.radarCount
+def update_user_radar_count(userid, inc_or_dec):
     # SQL STATEMENT
     sql_update = "UPDATE users SET radarCount = '%s' WHERE userId = '%s'"
+    sql_select = "SELECT username, radarcount FROM users WHERE userid = '%s'"
+
+    # SELECT 
+    dbconn.mycursor.execute(sql_select % userid)
+    result = dbconn.mycursor.fetchall()[0]
+    oldradarcount = result[1]
+
+    # INCREMENT or DECREMENT
+    if inc_or_dec == "inc":
+        newradarCount = oldradarcount + 1
+    else:
+        newradarCount = oldradarcount - 1
 
     # POST NEW VALUE TO TABLE
     variables_tuple = (newradarCount, userid)
     dbconn.mycursor.execute(sql_update % variables_tuple)
     dbconn.conn.commit()
-    return f"users.radarCount Updated: {newradarCount}"
 
-# FUNCTION TO UPDATE communityradar.usersCount OR INSERT OR DELETE
+    dbconn.mycursor.execute(sql_select % userid)
+    result = dbconn.mycursor.fetchall()[0]
+    return f"users.radarCount Updated: {result[0]}, {result[1]}\n"
+
+# UPDATE communityradar.usersCount OR INSERT OR DELETE
 def update_community_radar_count(inc_or_dec, questionid, newradarcount):
     # SQL STATEMENTS
     sql_update = "UPDATE communityradar SET usersCount = '%s' WHERE questionId = '%s'"
@@ -41,19 +55,19 @@ def update_community_radar_count(inc_or_dec, questionid, newradarcount):
         # DELETE QUESTION FROM communityradar
         dbconn.mycursor.execute(sql_delete % questionid)
         dbconn.conn.commit()
-        return "communityradar.usersCount 1 record deleted!"
+        return "communityradar.usersCount 1 record deleted!\n"
     elif inc_or_dec == "inc" and newradarcount == 1:
         # INSERT NEW QUESTION 
         dbconn.mycursor.execute(sql_insert % questionid)
         dbconn.conn.commit()
-        return "communityradar.usersCount 1 record inserted!"
+        return "communityradar.usersCount 1 record inserted!\n"
     else:
         # POST DECREMENTED VALUE TO THE TABLE
         dbconn.mycursor.execute(sql_update % (newradarcount, questionid))
         dbconn.conn.commit()
-        return f"communityradar.usersCount Updated: {newradarcount}"
+        return f"communityradar.usersCount Updated: {newradarcount}\n"
 
-# FUNCTION TO INSERT INTO OR DELETE FROM usersradar
+# INSERT INTO OR DELETE FROM usersradar
 def log_to_users_radar(ins_or_del, userid, questionid):
     sql_insert = "INSERT INTO usersradar (questionId, userId) VALUES ('%s', '%s')"
     sql_delete = "DELETE FROM usersradar WHERE questionId = '%s' AND userId = '%s'"
@@ -63,12 +77,12 @@ def log_to_users_radar(ins_or_del, userid, questionid):
         # ADDING TO RADAR
         dbconn.mycursor.execute(sql_insert % variables_tuple)
         dbconn.conn.commit()
-        return "usersradar 1 record inserted!"
+        return "usersradar 1 record inserted!\n"
     else:
         # DELETING FROM RADAR
         dbconn.mycursor.execute(sql_delete % variables_tuple)
         dbconn.conn.commit()
-        return "usersradar 1 record deleted!"
+        return "usersradar 1 record deleted!\n"
 
 # READ JSON STRING FROM ENVIRONMENT VARIABLES
 content_length = int(os.environ.get('CONTENT_LENGTH', 0))
@@ -89,7 +103,13 @@ ins_or_del = data.get('ins_or_del')
 # inc_or_dec = "inc"
 # ins_or_del = "ins"
 
-response = {"html_content": "Done"}
+# CALLING FUNCTIONS
+log += update_questions_radarCount(questionid, newradarcount)
+log += update_user_radar_count(userid, inc_or_dec)
+log += update_community_radar_count(inc_or_dec, questionid, newradarcount)
+log += log_to_users_radar(ins_or_del, userid, questionid)
+
+response = {"html_content": log}
 json_response = json.dumps(response)
 print(json_response)
 

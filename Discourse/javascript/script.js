@@ -7,19 +7,20 @@ let notificationsCount
 let lastOnline 
 let communityname
 let questioncontent
+let currentpage = 'Explore - Learn from peers!'
 
 function test(num) {
     console.log("Test", num); 
 }
 
 // EXECUTING A SEARCH
-function extract_query(url) {
+function extract_from_url() {
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('query');
     return query;
 };
 function fetchSearchResults() {
-    query = extract_query();  
+    query = extract_from_url();  
     fetch(`../discoursedb/questions/nltksearch.py?query=${encodeURIComponent(query)}`)
         .then(response => {
             return response.json();
@@ -36,11 +37,17 @@ function fetchSearchResults() {
         });
     console.log("Fetch Complete!");
 };
+
+// FETCH AND DISPLAY 
 function displayquestion(_innerhtml) {
     const urlParams = new URLSearchParams(window.location.search);
     const questionId = urlParams.get('questionId');
     if (questionId) {
+        console.log("Showing Question!")
         showquestion(questionId, _innerhtml);
+    }
+    else {
+        console.log("Not Showing Question!")
     };
     function showquestion(_questionId, _innerhtml) {
         const container = document.querySelector('.container-feed');
@@ -66,10 +73,74 @@ function displayquestion(_innerhtml) {
             });
             parent.appendChild(answersDiv);
             answersDiv.style.height = "100%";
+            savePageState('');
         })
         .catch(error => console.error("Error Fetching Answers: ", error))
     };
 };
+function displayuser(userid) {
+    fetch()
+}
+function fetchRadarQuestions(userid) {     
+    fetch(`../test.py`, {
+        method: "POST",
+        header: {
+            "Content-Type" : "application/json"
+        },
+        body: {
+            userid : userid
+        }
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        const container = document.getElementsByClassName('container-feed')[0]; 
+        container.innerHTML = ''; 
+        data.html_content.forEach(html => {
+            container.innerHTML += html; 
+        });
+        if (data.html_content) {
+            savePageState(query);
+        };
+    });
+    console.log("Fetch Complete!");
+};
+function fetch_user_content(_name_of_tab, _userid) {
+    console.log("Fetching results for ", _name_of_tab, " and ", _userid);
+    fetch("../discoursedb/questions/profiletabs.py", {
+        method: "POST",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userid : _userid,
+            name_of_tab : _name_of_tab
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        parent = document.querySelector('.user-content');
+        parent.innerHTML = '';
+        data.html_content.forEach(html => {
+            parent.innerHTML += html;
+        });
+    });
+};
+function update_url_question(questionId) {
+    if (questionId === '' ) {
+        const newUrl = `${window.location.origin}${window.location.pathname}`;
+        history.pushState('', '', newUrl);
+        console.log("Url Updated: ", newUrl);
+    }
+    else {
+        const newUrl = `${window.location.origin}${window.location.pathname}?questionId=${questionId}`;
+        history.pushState('', '', newUrl);
+        console.log("Url Updated: ", newUrl);
+    };
+}
 
 // MANAGING PAGE STATES
 function savePageState(searchQuery) {
@@ -81,32 +152,41 @@ function savePageState(searchQuery) {
     // Add the Page to Browser History 
     newUrl = window.location.href;
     history.replaceState({pageState}, '', newUrl);
-    console.log("Page State Saved: ", history.state.pageState);
+    console.log("Page State Saved!", pageState.searchquery);
 };
 function restorePageState(event) {
-    console.log(history.state.pageState);
     const {state} = event;
     if (state && state.pageState) {
+        searchquery = state.pageState.searchquery
         document.documentElement.innerHTML = state.pageState.htmlContent;
-        document.getElementById('query').innerHTML = state.pageState.searchquery;
-        console.log("Page restored!");
+        document.getElementById('query').value = searchquery;
+        console.log("Page restored!", searchquery);
+
+        // update page title
+        update_page_title(searchquery);
     }
     else{
         console.log("Page not restored!");
     }
 };
-function update_url(query) {
-    if (query === '' ) {
+function update_url(value, type) {
+    if (value === '' ) {
         const newUrl = `${window.location.origin}${window.location.pathname}`;
         history.pushState('', '', newUrl);
         console.log("Url Updated: ", newUrl);
     }
     else {
-        const newUrl = `${window.location.origin}${window.location.pathname}?query=${query}`;
+        console.log(window.location.origin, window.location.pathname);
+        const newUrl = `${window.location.origin}${window.location.pathname}?${type}=${value}`;
         history.pushState('', '', newUrl);
         console.log("Url Updated: ", newUrl);
-    }
+    };
 };
+function update_page_title(searchquery) {
+    DOMtitle = document.querySelector('title');
+    currentpage = `${searchquery} - Search Query`;
+    DOMtitle.textContent = currentpage;
+}
 
 // FUNCTIONS FOR USER DETAILS 
 function saveCurrentDetails() {
@@ -130,11 +210,6 @@ function updateUserDetails(_userId, _username, _community, _radarCount, _notific
     communityname = _communityname;
 };
         // using the details to update elements
-function setUserDetails() {
-    const container = document.querySelector('.user-community');
-    container.innerHTML = 'UON/' + communityname;
-    console.log("User's Community Set: " + communityname);
-};
 function updateProfile() {
     removeForm("loginbtn");
     const container = document.querySelector('.profile');
@@ -170,7 +245,7 @@ function removeForm(csselement) {
     document.querySelector('.' + csselement).remove();
 };
 function validateLoginForm(_username, _password) {
-    fetch("../python/resources/validateuser.py", {
+    fetch("../python/resources/getuserdata.py", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -214,18 +289,16 @@ function update_question_radarCount(inc_or_dec, ins_or_del, questionId, radarCou
         response.json()
     })            
     .then(data => {
-        console.log("...Database Updated!")
+        console.log(data.html_content);
     })
     .catch(error => console.error("Error updating radar counts in Database: ", error))
 
 };
 
 
+//------------------------------------------------- EVENT LISTENERS -----------------------------------------//
 
-
-
-
-// LOG IN
+    // LOG IN
 document.querySelector(".btn-login").addEventListener("click", function(loginClicked){
     loginClicked.preventDefault();
     console.log("Login Clicked!");
@@ -252,47 +325,32 @@ document.querySelector(".btn-login").addEventListener("click", function(loginCli
     .catch(error => console.error("Error Displaying Form: ", error))   
 });
 
-// MY COMMUNITIES
-document.querySelector('.option-mycommunities').addEventListener('click', function() {
-    const dropdown = document.querySelector('.dropdown-community');
-    console.log("My Communities Clicked!")
-    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-        dropdown.style.display = 'block';       
-    } else {
-        dropdown.style.display = 'none';
-    }
+    // QUERY SUBMITTED IN SEARCHBAR
+document.addEventListener('submit', function(event) {
+    const form = document.getElementById('form-search');
+
+    if (event.target.matches('#form-search')) {
+        // Prevent default action
+        event.preventDefault();
+    
+        // Store search query
+        const query = document.getElementById('query').value;
+    
+        // Log to Console
+        console.log("Search Query submitted: " + query);
+    
+        // Update Url
+        update_url(query, 'query');
+
+        // Update page title
+        update_page_title(query);
+    
+        // Call function to fetch using the new query in URL
+        fetchSearchResults(); // save current page state > enter new page > display search results
+    };
 });
 
-// QUERY SUBMITTED IN SEARCHBAR
-document.addEventListener('submit', function(event) {
-    if (event.target.matches('#form-search')) {
-        event.preventDefault();
-        console.log("matches #form-search");
-        document.getElementById('form-search').addEventListener('submit', function(formSubmitted) {
-            // Prevent default action
-            formSubmitted.preventDefault();
-        
-            // Store search query
-            const query = document.getElementById('query').value;
-        
-            // Log to Console
-            console.log("Search Query submitted: " + query);
-        
-            // Update Url
-            update_url(query);
-        
-            // Call function to fetch using the new query in URL
-            fetchSearchResults(); // save current page state > enter new page > display search results
-        });
-    }
-    else{
-        console.log("No Search Query Submitted");
-    };
-})
-
-// USER CLICKS ON PROFILE
-
-// USER CLICKS ON ADD TO RADAR
+    // ADD TO RADAR
 document.addEventListener('click', function(event) {
     const clickedElement = event.target.closest('.addtoradardiv');
     if (clickedElement) {
@@ -333,10 +391,10 @@ document.addEventListener('click', function(event) {
     };
 });
 
-// USER CLICKS ON SAVE
+    // USER CLICKS ON SAVE
 
 
-// USER CLICKS ON COPY LINK
+    // COPY LINK
 function showcopied() {
     const div = document.querySelector('.copied');
     div.classList.add('show');
@@ -362,41 +420,73 @@ document.addEventListener('click', function(event){
     };
 });
 
-// USER HOVERS OVER QUESTION
-document.addEventListener('mouseover', function(event){
-    const hoveredElement = event.target.closest('.question-anchortag');
-    if (hoveredElement) {
-        const questionId = hoveredElement.getAttribute('data-questionId');
-        const userId = hoveredElement.getAttribute('data-userId');
+// ------------------------------------------- ANCHORTAG LINKS ---------------------------------------------//
 
+    // USER CLICKS ON user
+document.addEventListener('click', function(event) {
+    if (event.target.matches('.user-profile')) {
+        userId = document.querySelector('.user-profile').getAttribute('data-userId');
+        update_url(userId, 'userId');
     }
-
-
 });
 
-// USER CLICKS ON QUESTION
+    // USER CLICKS ON QUESTION
 document.addEventListener('click', function(event){
-    const clickedElement = event.target.closest('.question-anchortag');
-    const question = event.target.closest('.container-question')
-    if (clickedElement) {
+    if (event.target.closest('.question-anchortag')) {
         event.preventDefault();
+        // variables
+        const question = event.target.closest('.container-question')
         const questionId = question.getAttribute('data-questionId');
         questioncontent = question.outerHTML;
+        // logic
         console.log("Question Clicked: " + questionId);
+        savePageState('');
+        update_url(questionId, 'questionId');
         displayquestion(questioncontent);
     };
 });
 
-// PAGE REFRESHED
-document.addEventListener('DOMContentLoaded', function() {
-    loadCurrentDetails();
-    setUserDetails();
-    update_url('');
-    savePageState();
+    // USER CLICKS ON MY RADAR
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.option-radar')) {
+        event.preventDefault();
+        document.querySelector('.option-radar').addEventListener('click', function(myradarclicked) {
+            // Prevent default action
+            myradarclicked.preventDefault();
+
+            const userid = userId;
+        
+            // Log to Console
+            console.log("Fetching Radar Questions for " + userid);
+        
+            // Call function to fetch using the new query in URL
+            fetchRadarQuestions(userid); // save current page state > enter new page > display search results
+        });
+    };
+})
+
+//-------------------------------------------------- PROFILE TABS -------------------------------------------//
+
+document.addEventListener('click', function(event) {
+    clickedElement = event.target.closest('.tab');
+    if (clickedElement) {
+        name_of_tab = clickedElement.textContent;
+        console.log("You have clicked on: ", name_of_tab);
+
+        // CALL FUNCTION TO FETCH AND DISPLAY IN "user-content"
+        fetch_user_content(name_of_tab, userId);
+    };
 });
 
-// USER GOES BACKWARD IN HISTORY
+// ----------------------------------------------------- MAIN -----------------------------------------------//
+
+    // PAGE REFRESHED
+document.addEventListener('DOMContentLoaded', function() {
+    loadCurrentDetails();
+    update_url('');
+});
+
+    // USER GOES BACKWARD IN HISTORY
 window.addEventListener('popstate', restorePageState);
 
-// USER CLICKS ON DROPDOWN UNDER MY COMMUNITIES
 

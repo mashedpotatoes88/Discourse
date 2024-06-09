@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://kit.fontawesome.com/89c39e4b83.js" crossorigin="anonymous"></script>
-    <title>Discourse</title>
+    <title>Explore - Learn from peers!</title>
 </head>
 <body>
     <div class="container container-ask">
@@ -37,92 +37,59 @@
                     <i class="fa-solid fa-bell"></i>
                 </div>
                 <div class="btn loginbtn">
-                    <a href="" class="btn-login">
+                    <a href="#" class="btn-login">
                         <p>Log In</p>
                     </a>
                 </div>  
             </div>
         </div>
-
     </div>
 
-                                    <!--  CONTENT -->
+<!------------------------------  CONTENT ------------------------------>
     
     <div class="tray tray-content">
         <!-- HOME, EXPLORE, COMMUNITIES -->
         <div class="container container-sidebar">
             <div class="sidebar">
                 <div class="option option-explore"><a href="../discoursedb/questions/displayposts.py"><p>Home</p></a></a></div>
-                <div class="option option-profile"><a href=""><p>Profile</p></a></a></div>
+                <div class="option option-profile">
+                    <a href="" class=""><p>Profile</p></a>
+                    <div class="profile-options">
+                        <div class="profile-option">My Questions</div>
+                        <div class="profile-option">My Comments</div>
+                        <div class="profile-option">Saved Questions</div>
+                        <div class="profile-option">Liked Answers</div>
+                    </div>
+                </div>
                 <div class="option option-radar">
                     <a href=""><p>My Radar</p><a></a></i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="option option-mycommunities">
-                    <p>My Communities</p>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-                <div class="dropdown-community">
-                    <div class="dropdown-community-child">
-                        <div class="community-logo"></div>
-                        <p><a href="#" class="user-community">UON/</a></p>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- BIG BUTTON TO ASK A QUESTION -->
-            <!-- QUESTION CARD (RADAR, COMMENTS, SATISFIED) -->
+        <!-- QUESTION CARD (RADAR, COMMENTS, SATISFIED) -->
         <div class="container container-feed">
-            <!--QUESTION CONTAINER -->
-            <div class="container container-question">
-                    <!-- COURSE AND USERNAME -->
-                    <div class="question-header">
-                        <div class="question-header-details">
-                            <div class="question-details">
-                                <p class="question-detail">@ericmacharia82</p>
-                                <div class="tag tag-community"><p class="question-detail">Comp Sci</p></div>
-                            </div>
-                            <div class="time-posted">
-                                <p class="question-detail">1 hour ago</p>
-                            </div>
-                        </div>
-                        
-                        <!-- OPTIONS  -->
-                        <div class="options-menu">   
-                            <!-- add to radar -->
-                            <div class="addtoradardiv">
-                                <p class="addtoradartext">7</p>
-                                <div class="icon"><i class="fa-solid fa-satellite-dish"></i></div>
-                            </div>
-                            <!-- save question -->
-                            <div class="savequestion" data-questionId="72">
-                                <i class="fa-regular fa-bookmark"></i>  <!--Contains Save, Report, Similar Questions-->
-                            </div>
-                            <!-- copy link -->
-                            <div class="copylink" data-questionId="72">
-                                <i class="fa-solid fa-link"></i>  
-                                <div class="copied">
-                                    <p>Link Copied!</p>
-                                </div>
-                            </div>
-
-                        </div>
-                        
+            
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="username">@fiona</div>
+                    <div class="community">Comp Sci</div>
+                    <div class="year-joined">Joined 2022</div>
+                    <div class="tabs">
+                        <div class="tab">My Questions</div>
+                        <div class="tab">My Comments</div>
+                        <div class="tab">Liked Answers</div>
+                        <div class="tab">Saved Questions</div>
                     </div>
-                    <!-- QUESTION AND RADAR BUTTON -->
-                    <div class="question-body">
-                        <div class="content">
-                            <div class="questionbox">In Machine Learning, Lorem ipsum dolor sit amet consectetur adipisicing elit. In id praesentium accusamus maxime minus quis blanditiis voluptatibus reiciendis, ad deleniti. what is a decision tree used for?</div>
-                        </div>
+                </div>
+                <div class="profile-body">
+                    <div class="user-content">
+                        <!-- DISPLAY DYNAMICALLY -->
+                        <!-- DEFAULT IS "my questions" -->
                     </div>
-                    <!-- QUESION NUMBERS -->
-                    <div class="question-numbers">
-                        <p class="question-detail">21 comments</p>
-                        <p class="question-detail">43 likes</p>
-                    </div>
+                </div>
             </div>
         </div>
-        
         <div class="container container-allcommunities">
             <!-- SEARCH BAR -->
             <div class="container container-searchbar">
@@ -143,4 +110,53 @@
 </body>
 </html>
 
-
+<!--QUESTION CONTAINER -->
+<div class="container container-question">
+    <!-- COURSE AND USERNAME -->
+    <div class="question-header">
+        <div class="question-header-details">
+            <div class="question-details">
+                <a href="http://localhost/Discourse/html/test.html?user=1" class="user-profile" data-userId="1">
+                    <p class="question-detail">@ericmacharia82</p>
+                </a>
+                <a href="http://localhost/Discourse/html/test.html?community=1" class="user-community">
+                    <div class="tag tag-community"><p class="question-detail">Comp Sci</p></div>
+                </a>
+            </div>
+            <div class="time-posted">
+                <p class="question-detail">1 hour ago</p>
+            </div>
+        </div>
+        
+        <!-- OPTIONS  -->
+        <div class="options-menu">   
+            <!-- add to radar -->
+            <div class="addtoradardiv">
+                <p class="addtoradartext">7</p>
+                <div class="icon"><i class="fa-solid fa-satellite-dish"></i></div>
+            </div>
+            <!-- save question -->
+            <div class="savequestion" data-questionId="72">
+                <i class="fa-regular fa-bookmark"></i>  <!--Contains Save, Report, Similar Questions-->
+            </div>
+            <!-- copy link -->
+            <div class="copylink" data-questionId="72">
+                <i class="fa-solid fa-link"></i>  
+                <div class="copied">
+                    <p>Link Copied!</p>
+                </div>
+            </div>
+        </div>                       
+    </div>
+    <a href="http://localhost/Discourse/html/test.html?questionId=%s" class="question-anchortag" data-questionId=%s>
+        <div class="question-body">
+            <div class="content">
+                <div class="questionbox">In Machine Learning, Lorem ipsum dolor sit amet consectetur adipisicing elit. In id praesentium accusamus maxime minus quis blanditiis voluptatibus reiciendis, ad deleniti. what is a decision tree used for?</div>
+            </div>
+        </div>
+        <div class="question-numbers">
+            <p class="question-detail">21 comments</p>
+            <p class="question-detail">43 likes</p>
+        </div>
+    </a>
+</div>
