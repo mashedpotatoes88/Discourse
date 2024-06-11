@@ -27,7 +27,7 @@ def login_form():
                         <input type="text" name="password" id="password" class="form-control" placeholder="Password" required>
                     </div>
                     <p><a href="">Forgot password</a></p>
-                    <button type="submit" class="btn btn-login">Log In</button>
+                    <button type="submit" class="btn submit-btn-login">Log In</button>
                 </form>
                 <p>Don't have an account? <a href="">Sign up.</a></p>
             </div>

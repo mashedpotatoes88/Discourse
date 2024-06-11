@@ -11,7 +11,6 @@ mycursor = conn.cursor()
 # USE THE DATABASE CALLED "discourse"
 mycursor.execute("USE discourse")
 
-
 # FUNCTION
 def return_all_html_divs(html_template_question, results, time_ago_posted):
     import json
@@ -20,6 +19,24 @@ def return_all_html_divs(html_template_question, results, time_ago_posted):
     for i in range(len(results)):
         one_html_div = (html_template_question % (results[i][3], results[i][0], results[i][1], time_ago_posted, \
                                                 results[i][3], results[i][4], results[i][3],\
+                                                results[i][3], results[i][3],results[i][3],\
+                                                results[i][5], results[i][6], results[i][7]))
+        all_html_divs.append(one_html_div)   
+
+    # SEND HTML TO JAVASCRIPT
+    response = {'html_content': all_html_divs}
+    json_response = json.dumps(response)
+    return(json_response)
+
+def return_all_html_divs2(html_template_question, results, time_ago_posted):
+    import json
+    # PUT TOGETHER THE HTML DIVS
+    all_html_divs = []
+    for i in range(len(results)):
+        one_html_div = (html_template_question % (results[i][3], results[i][8], results[i][8],\
+                                                results[i][0], results[i][8], results[i][1],\
+                                                time_ago_posted, results[i][3], results[i][4],\
+                                                results[i][3],\
                                                 results[i][3], results[i][3],results[i][3],\
                                                 results[i][5], results[i][6], results[i][7]))
         all_html_divs.append(one_html_div)   
@@ -146,3 +163,4 @@ def read_json_input():
     json_data = sys.stdin.read(content_length)
     data = json.loads(json_data)
     return data
+

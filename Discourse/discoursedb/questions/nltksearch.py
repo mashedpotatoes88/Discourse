@@ -59,7 +59,9 @@ def fetch_questions(list_of_keywords):
                         questions.radarCount,\
                         questions.string,\
                         questions.answersCount,\
-                        questions.totalLikesCount\
+                        questions.totalLikesCount,\
+                        questions.userId,\
+                        users.communityId\
                         FROM questions \
                         JOIN users ON questions.userId = users.userId \
                         JOIN community ON users.communityId = community.communityId \
@@ -88,7 +90,9 @@ def fetch_questions(list_of_keywords):
 # STORE FORM DATA IN VARIABLE 
 query_url = os.environ.get('QUERY_STRING', '')
 params = urllib.parse.parse_qs(query_url)
-query = params.get('query', [''])[0]  
+query = params.get('query', [''])[0] 
+
+# query = "online"
 
 # EXTRACT KEYWORDS
 keywords_list = extract_keywords(query)

@@ -11,7 +11,9 @@
     <div class="container container-ask">
         <i class="fa-solid fa-magnifying-glass"></i>
     </div>
-                                    <!-- HEADER -->
+
+<!------------------------------------------------ HEADER ---------------------------------------------------->
+    
     <!-- contains LOGO, SEARCH BAR, NOTIFICATION, LOG IN/USERNAME, CREDIT POINTS  -->
     <div class="tray tray-header">
         <!-- DISCOURSE LOGO -->
@@ -45,21 +47,15 @@
         </div>
     </div>
 
-<!------------------------------  CONTENT ------------------------------>
+<!------------------------------------------ SIDEBAR -------------------------------------------------------->
     
     <div class="tray tray-content">
         <!-- HOME, EXPLORE, COMMUNITIES -->
         <div class="container container-sidebar">
             <div class="sidebar">
-                <div class="option option-explore"><a href="../discoursedb/questions/displayposts.py"><p>Home</p></a></a></div>
+                <div class="option option-explore highlighted-option"><a href="../discoursedb/questions/displayposts.py"><p>Explore</p></a></a></div>
                 <div class="option option-profile">
                     <a href="" class=""><p>Profile</p></a>
-                    <div class="profile-options">
-                        <div class="profile-option">My Questions</div>
-                        <div class="profile-option">My Comments</div>
-                        <div class="profile-option">Saved Questions</div>
-                        <div class="profile-option">Liked Answers</div>
-                    </div>
                 </div>
                 <div class="option option-radar">
                     <a href=""><p>My Radar</p><a></a></i class="fa-solid fa-chevron-down"></i>
@@ -67,40 +63,39 @@
             </div>
         </div>
 
-        <!-- QUESTION CARD (RADAR, COMMENTS, SATISFIED) -->
+        <div class="vertical-line"></div>
+
+<!------------------------------------------ CONTENT -------------------------------------------------------->
         <div class="container container-feed">
             
-            <div class="profile-container">
-                <div class="profile-header">
-                    <div class="username">@fiona</div>
-                    <div class="community">Comp Sci</div>
-                    <div class="year-joined">Joined 2022</div>
-                    <div class="tabs">
-                        <div class="tab">My Questions</div>
-                        <div class="tab">My Comments</div>
-                        <div class="tab">Liked Answers</div>
-                        <div class="tab">Saved Questions</div>
-                    </div>
-                </div>
-                <div class="profile-body">
-                    <div class="user-content">
-                        <!-- DISPLAY DYNAMICALLY -->
-                        <!-- DEFAULT IS "my questions" -->
-                    </div>
-                </div>
-            </div>
         </div>
+
+        <div class="vertical-line"></div>
+
+<!------------------------------------------ COMMUNITIES --------------------------------------------------------->
         <div class="container container-allcommunities">
-            <!-- SEARCH BAR -->
-            <div class="container container-searchbar">
-                <form class="form form-search" id="form-search" action="../discoursedb/questions/nltksearch.py" method="get">
-                    <button type="submit" id="searchbtn" name="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <div class="container-query">
-                        <input type="text" id="query" name="query" placeholder="Search Communities">
-                    </div>
-                </form>
-                <div class="form-clear"><i class="fa-solid fa-xmark"></i></div>
+            <div class="top-half">
+                <div class="container-notifications-header">
+                    <div class="notifications-header">Notifications</div>
+                </div>
+                <div class="notifications-window">
+                    <!-- Display notifications dynamically -->
+                </div>
             </div>
+            <hr class="horizontal-line">
+            <div class="bottom-half">
+                <!-- SEARCH BAR -->
+                <div class="container container-searchbar">
+                    <form class="form form-search" id="form-search" action="../discoursedb/questions/nltksearch.py" method="get">
+                        <button type="submit" id="searchbtn" name="searchbtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <div class="container-query">
+                            <input type="text" id="query" name="query" placeholder="Search Communities">
+                        </div>
+                    </form>
+                    <div class="form-clear"><i class="fa-solid fa-xmark"></i></div>
+                </div>
+            </div>
+
         </div>
 
         
@@ -110,53 +105,3 @@
 </body>
 </html>
 
-<!--QUESTION CONTAINER -->
-<div class="container container-question">
-    <!-- COURSE AND USERNAME -->
-    <div class="question-header">
-        <div class="question-header-details">
-            <div class="question-details">
-                <a href="http://localhost/Discourse/html/test.html?user=1" class="user-profile" data-userId="1">
-                    <p class="question-detail">@ericmacharia82</p>
-                </a>
-                <a href="http://localhost/Discourse/html/test.html?community=1" class="user-community">
-                    <div class="tag tag-community"><p class="question-detail">Comp Sci</p></div>
-                </a>
-            </div>
-            <div class="time-posted">
-                <p class="question-detail">1 hour ago</p>
-            </div>
-        </div>
-        
-        <!-- OPTIONS  -->
-        <div class="options-menu">   
-            <!-- add to radar -->
-            <div class="addtoradardiv">
-                <p class="addtoradartext">7</p>
-                <div class="icon"><i class="fa-solid fa-satellite-dish"></i></div>
-            </div>
-            <!-- save question -->
-            <div class="savequestion" data-questionId="72">
-                <i class="fa-regular fa-bookmark"></i>  <!--Contains Save, Report, Similar Questions-->
-            </div>
-            <!-- copy link -->
-            <div class="copylink" data-questionId="72">
-                <i class="fa-solid fa-link"></i>  
-                <div class="copied">
-                    <p>Link Copied!</p>
-                </div>
-            </div>
-        </div>                       
-    </div>
-    <a href="http://localhost/Discourse/html/test.html?questionId=%s" class="question-anchortag" data-questionId=%s>
-        <div class="question-body">
-            <div class="content">
-                <div class="questionbox">In Machine Learning, Lorem ipsum dolor sit amet consectetur adipisicing elit. In id praesentium accusamus maxime minus quis blanditiis voluptatibus reiciendis, ad deleniti. what is a decision tree used for?</div>
-            </div>
-        </div>
-        <div class="question-numbers">
-            <p class="question-detail">21 comments</p>
-            <p class="question-detail">43 likes</p>
-        </div>
-    </a>
-</div>

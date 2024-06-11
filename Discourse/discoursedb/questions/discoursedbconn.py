@@ -11,15 +11,34 @@ mycursor = conn.cursor()
 # USE THE DATABASE CALLED "discourse"
 mycursor.execute("USE discourse")
 
-
 # FUNCTION
 def return_all_html_divs(html_template_question, results, time_ago_posted):
     import json
     # PUT TOGETHER THE HTML DIVS
     all_html_divs = []
     for i in range(len(results)):
-        one_html_div = (html_template_question % (results[i][3], results[i][0], results[i][1], time_ago_posted, \
-                                                results[i][3], results[i][4], results[i][3],\
+        one_html_div = (html_template_question % (results[i][3], results[i][8], results[i][8],\
+                                                results[i][0], results[i][8], results[i][1],\
+                                                time_ago_posted, results[i][3], results[i][4],\
+                                                results[i][3],\
+                                                results[i][3], results[i][3],results[i][3],\
+                                                results[i][5], results[i][6], results[i][7]))
+        all_html_divs.append(one_html_div)   
+
+    # SEND HTML TO JAVASCRIPT
+    response = {'html_content': all_html_divs}
+    json_response = json.dumps(response)
+    return(json_response)
+
+def return_all_html_divs2(html_template_question, results, time_ago_posted):
+    import json
+    # PUT TOGETHER THE HTML DIVS
+    all_html_divs = []
+    for i in range(len(results)):
+        one_html_div = (html_template_question % (results[i][3], results[i][8], results[i][8],\
+                                                results[i][0], results[i][8], results[i][1],\
+                                                time_ago_posted, results[i][3], results[i][4],\
+                                                results[i][3],\
                                                 results[i][3], results[i][3],results[i][3],\
                                                 results[i][5], results[i][6], results[i][7]))
         all_html_divs.append(one_html_div)   
@@ -72,8 +91,12 @@ html_template_question = f"""
             <div class="question-header">
                 <div class="question-header-details">
                     <div class="question-details">
-                        <p class="question-detail">@%s</p>
-                        <div class="tag tag-community"><p class="question-detail">%s</p></div>
+                        <a href="http://localhost/Discourse/html/test.html?user=%s" class="user-profile" data-userId="%s">                    
+                            <p class="question-detail">@%s</p>
+                        </a>
+                        <a href="http://localhost/Discourse/html/test.html?community=%s" class="user-community" data-community-id="%s">
+                            <div class="tag tag-community"><p class="question-detail">%s</p></div>
+                        </a>
                     </div>
                     <div class="time-posted">
                         <p class="question-detail">%s</p>
@@ -88,7 +111,7 @@ html_template_question = f"""
                             <div class="icon"><i class="fa-solid fa-satellite-dish"></i></div>
                         </div>
                     </div>
-                    <div class="savequestion" data-questionId="%s">
+                    <div class="savequestion" data-questionId="%s" data-bookmark-switch="off">
                         <i class="fa-regular fa-bookmark"></i>  <!--Contains Save, Report, Similar Questions-->
                     </div>
                     <div class="copylink" data-questionId="%s">
@@ -118,12 +141,12 @@ html_template_question = f"""
 template_user_profile = f"""
 <div class="profile-container">
     <div class="profile-header">
-        <div class="username">@fiona</div>
-        <div class="community">Comp Sci</div>
-        <div class="year-joined">Joined 2022</div>
+        <div class="username" data-userId="%s">@%s</div>
+        <div class="community" data-communityId="%s">%s</div>
+        <div class="year-joined">Joined %s</div>
         <div class="tabs">
-            <div class="tab">My Questions</div>
-            <div class="tab">My Comments</div>
+            <div class="tab">Questions</div>
+            <div class="tab">Comments</div>
             <div class="tab">Liked Answers</div>
             <div class="tab">Saved Questions</div>
         </div>
@@ -135,7 +158,6 @@ template_user_profile = f"""
         </div>
     </div>
 </div>"""
-
 
 def read_json_input():
     import json

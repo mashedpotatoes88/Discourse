@@ -5,36 +5,36 @@ print()
 import discoursedbconn as dbconn
 import json
 
-def fetch_user_profile(userId):
-    sql_select = f"""SELECT users.userId,\
-                        users.username,\
-                        users.communityId,\
+def fetch_community_profile(userId):
+    sql_select = f"""SELECT community.communityId,\
                         community.communityName,\
-                        users.yearJoined\
-                        FROM users\
-                        JOIN community ON users.communityId = community.communityId\
-                        WHERE users.userId = '{userId}' """
+                        community.membersCount\
+                        community.membersOnlineCount\
+                        community.radarQuestionsCount\
+                        FROM community\
+                        WHERE community.communityId = '{communityId}' """
     
     # EXECUTE SQL STATEMENT
     dbconn.mycursor.execute(sql_select)
     result = dbconn.mycursor.fetchall()[0]
 
     # INSERT DATA INTO TEMPLATE
-    response = dbconn.template_user_profile % (result[0], result[1], result[2], result[3], result[4])
+    response = dbconn.template_community_profile % (result[0], result[1], result[2], result[3], result[4])
     return response
 
 data = dbconn.read_json_input()
-userId = data.get("userId")
+communityId = data.get("communityId")
 
-# userId = 1
+# communityId = 1
 
 # MAIN
-content = fetch_user_profile(userId)
+content = fetch_community_profile(communityId)
 
 # RETURN JSON
 response = {"html_content" : content}
 json_response = json.dumps(response)
 print(json_response)
 
+# Close
 dbconn.mycursor.close()
 dbconn.conn.close()

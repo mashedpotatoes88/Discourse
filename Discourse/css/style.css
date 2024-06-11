@@ -7,7 +7,7 @@
 }
 body{
     margin: 0 0.3rem;
-    background-color: #353535;
+    background-color: #dadad8;
 }
 .tray{
     width: 100%;
@@ -30,10 +30,6 @@ body{
     align-items: center;
     width: 100%;
 }
-.container{
-    border-radius: 1rem;
-    border: 1px solid;
-}
 a{
     text-decoration: none;
     color: black;
@@ -42,7 +38,41 @@ a{
 a:hover, button:hover{
     cursor: pointer;
 }
+.vertical-line{
+    height: 100%;
+    border-left: 1px solid black;
+}
+.horizontal-line{
+    height: 0.5px;
+    width: 100%;
+    max-width: 23vw;
+    background-color: black;
+    border: none;
+}
 
+/* ----------------------------------------------- ICONS -------------------------------------------------- */
+
+.fa-solid{
+    font-size: 1.3rem;
+    background-color: transparent;
+}
+.fa-xmark{
+    margin-right: 1rem;
+}
+.fa-satellite-dish{
+    text-wrap: nowrap;
+    font-size: 12px;
+}
+.fa-link{
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 3px;
+}
+.fa-bookmark{
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 3px;
+}
                     /* ASK QUESTION */
                     /* ASK QUESTION */
                     /* ASK QUESTION */
@@ -101,13 +131,14 @@ a:hover, button:hover{
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: #f9f8f5;
+    background-color: transparent;
     border-radius: 0.8rem;
+    border: 1px solid;
     width: 43vw;
     max-width: 100%;
 }
 .container-searchbar:hover{
-    background-color: rgba(240, 248, 255, 0.9);
+    background-color: rgba(221, 226, 230, 0.9);
 }
 /* form-searchbar styled in form */
 .form-search{
@@ -119,13 +150,7 @@ a:hover, button:hover{
     border: 0;
     background-color: transparent;
 }
-.fa-solid{
-    font-size: 1.3rem;
-    background-color: transparent;
-}
-.fa-xmark{
-    margin-right: 1rem;
-}
+
 .container-query{
     margin-left: 1rem;
     width: 100%;
@@ -163,6 +188,9 @@ a:hover, button:hover{
 .profile > *{
     margin: 0.5rem;
 }
+.profile-top-right{
+    color: #555;
+}
 
                     /* CONTENT */
                     /* CONTENT */
@@ -186,7 +214,7 @@ a:hover, button:hover{
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    width: 23vw;
+    width: 18vw;
     height: 100%;
     /* background-color: #2c9d4d; */
 }
@@ -200,6 +228,7 @@ a:hover, button:hover{
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    border-radius: 1rem;
     cursor: pointer;
 }
 .sidebar .option p{
@@ -207,8 +236,11 @@ a:hover, button:hover{
     font-size: 1.5rem;
 }
 .sidebar .option:hover{
-    background-color: #404041;
+    background-color: rgba(62, 107, 145, 0.9);
     transition: 0.3s;
+}
+.highlighted-option{
+    border: 3px solid #4081B5 ;
 }
 .option-profile{
     display: flex;
@@ -226,9 +258,9 @@ a:hover, button:hover{
         /* CONTENT */
         /* CONTENT */
 .container-feed{
-    padding: 0.3rem 1rem;;
-    background-color: #f9f8f5;
-    width: 50vw;
+    padding: 0.3rem 0;;
+    /* background-color: #888; */
+    width: 55vw;
     height: 100%;
     overflow: auto;
 }
@@ -251,18 +283,18 @@ a:hover, button:hover{
 }
 
 
-    /*          */
-    /* QUESTION */
-    /*          */
+/* ---------------------------------------------- QUESTION ------------------------------------------------ */
+
 .container-question{
     margin-bottom: 0.1rem;
     background-color: #f9f8f5;
     padding: 0.8rem 1rem 0.2rem;
     border-radius: 1rem;
+    border: 1px solid;
     min-height: fit-content;
 }
 .container-question:hover{
-    background-color: #bebdbd;
+    background-color: #e7e7e7;
     transition: 0.2s ease-in-out;
 }
 .question-body{
@@ -300,7 +332,11 @@ a:hover, button:hover{
     font-size: 12px;
     width: max-content;
 }
+.user-profile:hover {
+    text-decoration: 1px underline;
+}
 .tag-community{
+    margin-top: 1px;
     padding: 0 0.4rem;
     background-color: gray;
     border-radius: 1rem;
@@ -328,7 +364,7 @@ a:hover, button:hover{
     padding: 3px 4px;
     cursor: pointer;
 }
-.addtoradartext, .fa-satellite-dish{
+.addtoradartext{
     text-wrap: nowrap;
     font-size: 12px;
 }
@@ -342,11 +378,6 @@ a:hover, button:hover{
 }
 .copylink{
     display: flex;
-}
-.fa-link{
-    font-size: 0.9rem;
-    cursor: pointer;
-    margin-top: 3px;
 }
 .copied {
     visibility: hidden;
@@ -367,20 +398,14 @@ a:hover, button:hover{
     visibility: visible;
     opacity: 1;
 }
-.fa-bookmark{
-    font-size: 0.9rem;
-    cursor: pointer;
-    margin-top: 3px;
-}
 .container-allcommunities{
     padding: 1rem 0.4rem;
     width: 23vw;
     height: 100%;
 }
 
-        /*            */
-        /* LOGIN FORM */
-        /*            */
+/* ------------------------------------------ LOGIN FORM -------------------------------------------------- */
+
 .tray-login-form{
     position: fixed;
     top: 50%;
@@ -432,10 +457,8 @@ a:hover, button:hover{
     border: 1px solid;
 }
 
+/* ------------------------------------------------ANSWER-------------------------------------------------- */
 
-    /*          */
-    /* ANSWER   */
-    /*          */
 .answers-container{
     background-color: transparent;
 }
@@ -460,8 +483,34 @@ a:hover, button:hover{
 .answer-body{
     width: 100%;
 }
+.answer-numbers{
+    padding-left: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+.answer-numbers > *{
+    margin-right: 0.5rem;
+}
+.answer-comments, .answer-likes{
+    display: flex;
+    align-items: center;
+    padding: 1px 6px;
+    border-radius: 1rem;
+    border: 1px solid;
+}
+.answer-comments:hover, .answer-likes:hover{
+    background-color: #888;
+    transition: 0.2s;
+}
+.answer-comments > *, .answer-likes > * {
+    font-size: 12px;
+}
+.answer-comments > :first-child, .answer-likes > :first-child {
+    margin-right: 0.25rem;
+}
 
-/*------------------------------------ PROFILE ----------------------------------- */
+
+/*---------------------------------------------- PROFILE -------------------------------------------------- */
 
 .profile-container{
     padding: 1rem 0.5rem 0;
@@ -470,14 +519,14 @@ a:hover, button:hover{
     background-color: #f9f8f5;
     margin-bottom: 1rem;
     position: sticky;
-    top: 1rem;
+    top: -4.8px;
 }
 .tabs{
     width: 100%;
     margin: 1rem 0;
     display: flex;
     justify-content: space-around;
-    background-color: #736e6e;
+    background-color: #9a9696;
     border-radius: 0.5rem;
 }
 .tabs > *{
@@ -487,9 +536,26 @@ a:hover, button:hover{
     cursor: pointer;
 }
 .tabs > *:hover{
-    background-color: #5c5757;
+    background-color: #848484;
     border-radius: 0.5rem;
 }
 .user-content{
     margin: 0.2rem;
+}
+.highlighted-profile-tab{
+    border-bottom: 3px solid #4081B5;
+}
+
+/* ------------------------------------- COMMUNITIES + NOTIFICATIONS -------------------------------------- */
+.container-allcommunities{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.top-half, .bottom-half{
+    height: 48%;
+}
+.notifications-window{
+    height: 92%;
+    background-color: #555;
 }

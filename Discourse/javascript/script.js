@@ -9,18 +9,14 @@ let communityname
 let questioncontent
 let currentpage = 'Explore - Learn from peers!'
 
-function test(num) {
-    console.log("Test", num); 
-}
-
 // EXECUTING A SEARCH
-function extract_from_url() {
+function extract_from_url(type) {
     const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get('query');
-    return query;
+    const value = urlParams.get(type);
+    return value;
 };
 function fetchSearchResults() {
-    query = extract_from_url();  
+    query = extract_from_url('query');  
     fetch(`../discoursedb/questions/nltksearch.py?query=${encodeURIComponent(query)}`)
         .then(response => {
             return response.json();
@@ -39,6 +35,102 @@ function fetchSearchResults() {
 };
 
 // FETCH AND DISPLAY 
+function viewuser() {
+    const userId = extract_from_url('userId');
+    fetch('../discoursedb/questions/viewuser.py', {
+        method: 'POST',
+        header: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userId : userId
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        parent = document.querySelector('.container-feed');
+        parent.innerHTML = data.html_content;
+    })
+};
+function viewcommunity() {
+    const userId = extract_from_url('userId');
+    fetch('../discoursedb/questions/viewuser.py', {
+        method: 'POST',
+        header: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userId : userId
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        parent = document.querySelector('.container-feed');
+        parent.innerHTML = data.html_content;
+    })
+};
+function fetch_user_content(_name_of_tab, _userId) {
+    highlight_profile_tab(_name_of_tab);
+    console.log("Fetching results for ", _name_of_tab, " and ", _userId);
+    fetch("../discoursedb/questions/profiletabs.py", {
+        method: "POST",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userid : _userId,
+            name_of_tab : _name_of_tab
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        parent = document.querySelector('.user-content');
+        parent.innerHTML = '';
+        if (data.html_content) {
+            data.html_content.forEach(html => {
+                parent.innerHTML += html;
+            });
+        }
+        else {
+            parent.textContent = 'No Records Found!';
+        }
+    });
+};
+function fetch_community_content(_name_of_tab, _userId) {
+    highlight_profile_tab(_name_of_tab);
+    console.log("Fetching results for ", _name_of_tab, " and ", _userId);
+    fetch("../discoursedb/questions/profiletabs.py", {
+        method: "POST",
+        headers: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userid : _userId,
+            name_of_tab : _name_of_tab
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        parent = document.querySelector('.user-content');
+        parent.innerHTML = '';
+        if (data.html_content) {
+            data.html_content.forEach(html => {
+                parent.innerHTML += html;
+            });
+        }
+        else {
+            parent.textContent = 'No Records Found!';
+        }
+    });
+};
 function displayquestion(_innerhtml) {
     const urlParams = new URLSearchParams(window.location.search);
     const questionId = urlParams.get('questionId');
@@ -78,11 +170,8 @@ function displayquestion(_innerhtml) {
         .catch(error => console.error("Error Fetching Answers: ", error))
     };
 };
-function displayuser(userid) {
-    fetch()
-}
 function fetchRadarQuestions(userid) {     
-    fetch(`../test.py`, {
+    fetch(`../discoursedb/questions/test.py`, {
         method: "POST",
         header: {
             "Content-Type" : "application/json"
@@ -97,50 +186,36 @@ function fetchRadarQuestions(userid) {
     .then(data => {
         const container = document.getElementsByClassName('container-feed')[0]; 
         container.innerHTML = ''; 
-        data.html_content.forEach(html => {
-            container.innerHTML += html; 
-        });
         if (data.html_content) {
-            savePageState(query);
-        };
+            data.html_content.forEach(html => {
+                container.innerHTML += html;
+            });
+            savePageState('');
+        }
+        else{
+            container.innerHTML = 'No questions in Radar yet!';
+        }
     });
     console.log("Fetch Complete!");
 };
-function fetch_user_content(_name_of_tab, _userid) {
-    console.log("Fetching results for ", _name_of_tab, " and ", _userid);
-    fetch("../discoursedb/questions/profiletabs.py", {
-        method: "POST",
-        headers: {
-            "Content-Type" : "application/json"
-        },
-        body: JSON.stringify({
-            userid : _userid,
-            name_of_tab : _name_of_tab
-        })
-    })
-    .then(response => {
-        return response.json();
-    })
-    .then(data => {
-        parent = document.querySelector('.user-content');
-        parent.innerHTML = '';
-        data.html_content.forEach(html => {
-            parent.innerHTML += html;
-        });
+function highlight_profile_tab(name_of_tab) {
+    console.log(name_of_tab);
+    const profile_tabs = document.querySelectorAll('.tab');
+    console.log(profile_tabs);
+    profile_tabs.forEach(tab => {
+        if (tab.classList.contains('highlighted-profile-tab')) {
+            tab.classList.remove('highlighted-profile-tab');
+            console.log("Profile Tab Unhighlighted! ", tab);
+        }
+        if (tab.textContent === name_of_tab) {
+            tab.classList.add('highlighted-profile-tab');
+            console.log("Profile tab highlighted! ", tab);
+        }
+        else{
+            console.log(`${name_of_tab} is not equal to ${tab}`);
+        }
     });
 };
-function update_url_question(questionId) {
-    if (questionId === '' ) {
-        const newUrl = `${window.location.origin}${window.location.pathname}`;
-        history.pushState('', '', newUrl);
-        console.log("Url Updated: ", newUrl);
-    }
-    else {
-        const newUrl = `${window.location.origin}${window.location.pathname}?questionId=${questionId}`;
-        history.pushState('', '', newUrl);
-        console.log("Url Updated: ", newUrl);
-    };
-}
 
 // MANAGING PAGE STATES
 function savePageState(searchQuery) {
@@ -176,7 +251,6 @@ function update_url(value, type) {
         console.log("Url Updated: ", newUrl);
     }
     else {
-        console.log(window.location.origin, window.location.pathname);
         const newUrl = `${window.location.origin}${window.location.pathname}?${type}=${value}`;
         history.pushState('', '', newUrl);
         console.log("Url Updated: ", newUrl);
@@ -189,32 +263,12 @@ function update_page_title(searchquery) {
 }
 
 // FUNCTIONS FOR USER DETAILS 
-function saveCurrentDetails() {
-    let userDetails = [userId, username, communityid, radarCount, notificationsCount, communityname];
-    console.log("User Details Saved: " + userDetails);
-    localStorage.setItem('userDetails', JSON.stringify(userDetails));
-};
-function loadCurrentDetails() {
-    let userDetailsJson = localStorage.getItem('userDetails')
-    if (userDetailsJson) {
-        let userDetails= JSON.parse(userDetailsJson);
-        updateUserDetails(userDetails[0], userDetails[1], userDetails[2], userDetails[3], userDetails[4], userDetails[5]);
-    };
-};
-function updateUserDetails(_userId, _username, _community, _radarCount, _notificationsCount, _communityname) {
-    userId = _userId;
-    username = _username;
-    communityid = _community;
-    radarCount = _radarCount;
-    notificationsCount = _notificationsCount;
-    communityname = _communityname;
-};
-        // using the details to update elements
 function updateProfile() {
     removeForm("loginbtn");
     const container = document.querySelector('.profile');
 
     const anchor = document.createElement('a');
+    anchor.classList.add = 'profile-top';
     anchor.href = "#";
     anchor.textContent = '@' + username;
     console.log("Anchor Tag Created!")
@@ -227,24 +281,18 @@ function updateProfile() {
     console.log("Div Created!")
 };
 
-// FUNCTIONS FOR LOCAL STORAGE
-function saveSearchToLocalStorage(query, results) {
-    localStorage.setItem('searchQuery', query);
-    localStorage.setItem('searchResults', JSON.stringify(results));
-};
-function displaySavedSearchResults(results) {
-    const container = document.getElementsByClassName('container-feed')[0]; 
-    container.innerHTML = ''; 
-    results.forEach(html => {
-        container.innerHTML += html;
-    }) 
+// FUNCTIONS FOR SESSION STORAGE
+function saveSearchToSessionStorage(userDetails) {
+    sessionStorage.setItem('searchQuery', query);
+    sessionStorage.setItem('searchResults', JSON.stringify(results));
 };
 
-// FUNCTIONS TO DO WITH FORM
+// Login Form
 function removeForm(csselement) {
     document.querySelector('.' + csselement).remove();
 };
 function validateLoginForm(_username, _password) {
+    console.log('Validating Login Details');
     fetch("../python/resources/getuserdata.py", {
         method: "POST",
         headers: {
@@ -259,18 +307,30 @@ function validateLoginForm(_username, _password) {
         return response.json()
     })
     .then(data => {
-        // UPDATE GLOBAL VARIABLES userId, username, community, radarCount, notificationsCount and lastOnline
-        data_array = data.html_content;
-        updateUserDetails(data_array[0], data_array[1], data_array[2], data_array[3], data_array[4], data_array[5]);
-        console.log("Login Successful!");
-        // removeForm("tray-login-form");
-        saveCurrentDetails();
+        if (data.hasOwnProperty('log')) {
+            console.log("Login Unsuccessful!");
+            let p = document.createElement('p');
+            p.textContent = data.log;
+            p.style.color = 'red';
+            // clear fields
+            const formfields = document.querySelectorAll('#login-form-field input');
+            formfields.forEach(formfield => {
+                formfield.value = '';
+            })
+            // display error message
+            let elementBefore = formfields[1].parentNode;
+            elementBefore.insertAdjacentElement('afterend', p);
+        }
+        else {
+            console.log("Login Successful!");
+            updateProfile();
+            removeForm('tray-login-form');
+        }
     })
-    .catch(error => console.error("Error Validating Login Details: ", error))
-    return false;
+    .catch(error => console.error("Error Validating Login Details: ", error));
 };
 
-// UPDATE DATABASE
+// Update Database
 function update_question_radarCount(inc_or_dec, ins_or_del, questionId, radarCount, userid) {
     fetch('../discoursedb/questions/addtoradar.py', {
         method: 'POST',
@@ -292,40 +352,63 @@ function update_question_radarCount(inc_or_dec, ins_or_del, questionId, radarCou
         console.log(data.html_content);
     })
     .catch(error => console.error("Error updating radar counts in Database: ", error))
-
+};
+function update_question_savedCount(userId, questionId, inc_or_dec) {
+    fetch("../discoursedb/questions/savequestion.py", {
+        method: "POST",
+        header: {
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({
+            userId : userId,
+            questionId : questionId,
+            inc_or_dec : inc_or_dec
+        })
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.log);
+    })
+    .catch(error => console.error("Error updating saved counts: ", error))
 };
 
 
 //------------------------------------------------- EVENT LISTENERS -----------------------------------------//
 
-    // LOG IN
-document.querySelector(".btn-login").addEventListener("click", function(loginClicked){
-    loginClicked.preventDefault();
-    console.log("Login Clicked!");
-    const container = document.querySelector("body")
-    fetch("../python/resources/loginform.py")
-    .then(response => {
-        return response.json()
-    })
-    .then(data => {
-        container.innerHTML += data.html_content[0]
-        console.log("Login Form Displayed!")
-
-        // WHEN USER SUBMITS LOGIN FORM
-        document.querySelector(".login-form").addEventListener("submit", function(loginFormSubmitted) {
-        loginFormSubmitted.preventDefault();
-        console.log("Login Details Submitted!");
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        validateLoginForm(username, password);
-        updateProfile();
-        removeForm("tray-login-form");
-    });
-    })
-    .catch(error => console.error("Error Displaying Form: ", error))   
+// log in
+document.addEventListener("click", function(event){
+    if (event.target.closest('.btn-login')) {
+        event.preventDefault();
+        console.log("Login Clicked!");
+        const container = document.querySelector("body")
+        fetch("../python/resources/loginform.py")
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            container.innerHTML += data.html_content[0]
+            console.log("Login Form Displayed!")
+        })
+        .catch(error => console.error("Error Displaying Form: ", error))   
+    }
 });
 
-    // QUERY SUBMITTED IN SEARCHBAR
+// submit login form
+document.addEventListener("submit", function(event) {
+    if (event.target.closest('.login-form')) {
+        event.preventDefault();
+        // variables
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        // logic
+        console.log("Login Details Submitted!", username, password);
+        validateLoginForm(username, password);
+    }
+});
+
+// Query submitted in searchbar
 document.addEventListener('submit', function(event) {
     const form = document.getElementById('form-search');
 
@@ -350,7 +433,9 @@ document.addEventListener('submit', function(event) {
     };
 });
 
-    // ADD TO RADAR
+//-------------------------------------------- QUESTION ACTIONS ---------------------------------------------//
+
+// ADD TO RADAR
 document.addEventListener('click', function(event) {
     const clickedElement = event.target.closest('.addtoradardiv');
     if (clickedElement) {
@@ -391,10 +476,36 @@ document.addEventListener('click', function(event) {
     };
 });
 
-    // USER CLICKS ON SAVE
+// SAVE
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.savequestion')) {
+        console.log("Save Question Clicked!");
+        event.preventDefault();
+        //variables
+        const questionId = event.target.closest('.container-question').getAttribute('data-questionid');
+        const savequestionbtn = event.target.closest('.savequestion');
+        const bookmarkSwitch = savequestionbtn.getAttribute('data-bookmark-switch');
+        let inc_or_dec = '';
+        //logic
+        if (bookmarkSwitch === "off") {
+            savequestionbtn.dataset.bookmarkSwitch = 'on';
+            console.log(savequestionbtn.dataset.bookmarkSwitch);
+            savequestionbtn.innerHTML = `<i class="fa-solid fa-bookmark"></i>`;
+            inc_or_dec = 'inc';
+            console.log("Bookmark changed to dark!");
+        }
+        else {
+            savequestionbtn.dataset.bookmarkSwitch = 'off';
+            console.log(savequestionbtn.dataset.bookmarkSwitch);
+            savequestionbtn.innerHTML = `<i class="fa-regular fa-bookmark"></i>`;
+            inc_or_dec = 'dec';
+            console.log("Bookmark changed to clear!");
+        }
+        update_question_savedCount(userId, questionId, inc_or_dec);
+    };
+});
 
-
-    // COPY LINK
+// COPY LINK
 function showcopied() {
     const div = document.querySelector('.copied');
     div.classList.add('show');
@@ -422,15 +533,33 @@ document.addEventListener('click', function(event){
 
 // ------------------------------------------- ANCHORTAG LINKS ---------------------------------------------//
 
-    // USER CLICKS ON user
+// click on specific user
 document.addEventListener('click', function(event) {
-    if (event.target.matches('.user-profile')) {
-        userId = document.querySelector('.user-profile').getAttribute('data-userId');
+    if (event.target.closest('.user-profile')) {
+        event.preventDefault();
+        const userId = event.target.closest('.user-profile').getAttribute('data-userid');
+        console.log('User Clicked!', userId);
+        savePageState('');
         update_url(userId, 'userId');
-    }
+        viewuser();
+        fetch_user_content('Questions', userId);
+    };
 });
 
-    // USER CLICKS ON QUESTION
+// click on specific community
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.user-community')) {
+        event.preventDefault();
+        const communityid = event.target.closest('.user-community').getAttribute('data-community-id');
+        console.log('User Clicked!', communityid);
+        savePageState('');
+        update_url(communityid, 'communityid');
+        viewcommunity();
+        fetch_community_content('Timeline', communityid);
+    };
+});
+
+// specific question
 document.addEventListener('click', function(event){
     if (event.target.closest('.question-anchortag')) {
         event.preventDefault();
@@ -446,44 +575,40 @@ document.addEventListener('click', function(event){
     };
 });
 
-    // USER CLICKS ON MY RADAR
+// my radar
 document.addEventListener('click', function(event) {
     if (event.target.closest('.option-radar')) {
         event.preventDefault();
-        document.querySelector('.option-radar').addEventListener('click', function(myradarclicked) {
-            // Prevent default action
-            myradarclicked.preventDefault();
-
-            const userid = userId;
-        
-            // Log to Console
-            console.log("Fetching Radar Questions for " + userid);
-        
-            // Call function to fetch using the new query in URL
-            fetchRadarQuestions(userid); // save current page state > enter new page > display search results
-        });
+        //variables
+        const userid = userId;
+        //logic
+        console.log("Fetching Radar Questions for " + userid);
+    
+        // save current page state > enter new page > display search results
+        fetchRadarQuestions(userid); 
     };
 })
 
-//-------------------------------------------------- PROFILE TABS -------------------------------------------//
+//--------------------------------------------- PROFILE TABS ------------------------------------------------//
 
 document.addEventListener('click', function(event) {
     clickedElement = event.target.closest('.tab');
     if (clickedElement) {
         name_of_tab = clickedElement.textContent;
         console.log("You have clicked on: ", name_of_tab);
+        // variables
+        const userId = document.querySelector('.username').getAttribute('data-userid');
 
         // CALL FUNCTION TO FETCH AND DISPLAY IN "user-content"
         fetch_user_content(name_of_tab, userId);
     };
 });
 
-// ----------------------------------------------------- MAIN -----------------------------------------------//
+// --------------------------------------------- MAIN -------------------------------------------------------//
 
     // PAGE REFRESHED
 document.addEventListener('DOMContentLoaded', function() {
     loadCurrentDetails();
-    update_url('');
 });
 
     // USER GOES BACKWARD IN HISTORY

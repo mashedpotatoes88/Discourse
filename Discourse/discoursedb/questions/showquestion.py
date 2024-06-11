@@ -10,8 +10,7 @@ import discoursedbconn as dbconn
 
 # <div class="container container-question"> STORED IN A TEMPLATE
 html_template_answer = f"""
-    <a href="" class="answer-anchortag">
-        <div class="container container-answer">
+        <div class="container container-answer" data-answer-id="%s">
             <div class="answer-votes">
                 <i class="fa-solid fa-sort-up"></i>
                 <div class="votes">%s</div>
@@ -22,8 +21,12 @@ html_template_answer = f"""
                 <div class="question-header">
                     <div class="question-header-details">
                         <div class="question-details">
-                            <p class="question-detail">@%s</p>
-                            <div class="tag tag-community"><p class="question-detail">%s</p></div>
+                            <a href="http://localhost/Discourse/html/test.html?user=%s" class="user-profile" data-userId="%s">                    
+                                <p class="question-detail">@%s</p>
+                            </a>
+                            <a href="http://localhost/Discourse/html/test.html?community=%s" class="user-community">
+                                <div class="tag tag-community"><p class="question-detail">%s</p></div>
+                            </a>
                         </div>
                         <div class="time-posted">
                             <p class="question-detail">%s</p>
@@ -43,13 +46,18 @@ html_template_answer = f"""
                     </div>
                 </div>
                 <!-- QUESION NUMBERS -->
-                <div class="question-numbers">
-                    <p class="question-detail">%s comments</p>
-                    <p class="question-detail">%s likes</p>
+                <div class="answer-numbers">
+                    <div class="answer-comments">
+                        <i class="fa-regular fa-comment"></i>
+                        <p class="question-detail">%s</p>
+                    </div>
+                    <div class="answer-likes">
+                        <i class="fa-regular fa-heart"></i>
+                        <p class="question-detail">%s</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </a>"""
+        </div>"""
 
 # GET TIME AGO POSTED
 def get_time_ago_posted(time_difference):
@@ -89,7 +97,8 @@ def get_time_ago_posted(time_difference):
 # function to FETCH ANSWERS
 def fetch_answers(_questionid):
     sql_select = f"SELECT answers.voteCount, users.username, community.tagname, answers.timestamp,\
-            answers.questionId,  answers.string, answers.commentsCount, answers.likesCount\
+            answers.questionId,  answers.string, answers.commentsCount, answers.likesCount, answers.answerId,\
+            users.userId, community.communityId\
             FROM answers JOIN users ON answers.userId = users.userId JOIN community ON \
             users.communityId = community.communityId WHERE answers.questionId = {_questionid}\
             ORDER BY answers.likesCount DESC"
@@ -108,7 +117,8 @@ def fetch_answers(_questionid):
     # PUT TOGETHER THE HTML DIVS
     all_html_divs = []
     for i in range(len(results)):
-        one_html_div = (html_template_answer % (results[i][0],results[i][1], results[i][2], time_ago_posted, \
+        one_html_div = (html_template_answer % (results[i][8], results[i][0], results[i][10], results[i][10],\
+                                                results[i][1], results[i][9], results[i][2], time_ago_posted,\
                                                 results[i][4], results[i][5], results[i][6], results[i][7]))
         all_html_divs.append(one_html_div)   
 
